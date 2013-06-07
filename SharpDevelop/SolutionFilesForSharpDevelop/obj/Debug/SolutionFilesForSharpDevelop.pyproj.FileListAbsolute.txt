@@ -1,0 +1,10 @@
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\bin\Debug\SolutionFilesForSharpDevelop.exe.config
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\bin\Debug\SolutionFilesForSharpDevelop.exe
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\bin\Debug\SolutionFilesForSharpDevelop.dll
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\bin\Debug\IronPython.dll
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\bin\Debug\IronPython.Modules.dll
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\bin\Debug\Microsoft.Dynamic.dll
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\bin\Debug\Microsoft.Scripting.dll
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\bin\Debug\Microsoft.Scripting.Metadata.dll
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\obj\Debug\SolutionFilesForSharpDevelop.pyprojResolveAssemblyReference.cache
+C:\Users\MattCampbell\Documents\GitHub\GraphSelfOrganization\SharpDevelop\SolutionFilesForSharpDevelop\obj\Debug\SolutionFilesForSharpDevelop.exe
