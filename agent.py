@@ -17,6 +17,7 @@ class Agent(object):
 		#	better idea for now
 		self.truss_node = benpy.TrussNode(manager.truss_structure, identifier)
 		self._id = truss_node.ID
+		self.proximity = None
 
 	def serialize(self):
 		"""convert agent into a python dictionary for yaml"""
