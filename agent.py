@@ -6,6 +6,14 @@ import benpy
 
 import field
 
+#is there existing python code for this? boost.python may be necessary
+class BaysianLearner(object):
+	def __init__(self, options):
+		self.options = options
+		#start from a uniform distribution? or randomize and distribute?
+		self.strategy = dict.fromkeys(options.iterkeys(), 1.0/len(options))
+	
+
 class Agent(object):
 	#actions = #define class for this? No, use graphsynth if possible.
 	def __init__(self, location):
