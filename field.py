@@ -44,6 +44,15 @@ class MexicanHat(object):
 				2/(math.sqrt(3.0*self.sigma) * math.pi**0.25) )
 
 
+class MexicanHatGradient(MexicanHat):
+	def __call__(self, a, b):
+		distance = euclidean_distance(a,b)
+		d_norm = (distance / self.sigma)**2
+		return ( (distance**3 - 3*distance*self.sigma**2) * 
+				  math.exp(-0.5*d_norm) * 2 / (math.sqrt(3.0) *
+				  math.pi**0.25 * self.sigma**4.5) )
+
+
 class Field(object):
 	def __init__(self, agents, proximity=InverseSquare()):
 		self.agents = agents
