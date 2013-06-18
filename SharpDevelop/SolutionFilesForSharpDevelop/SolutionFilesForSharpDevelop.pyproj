@@ -58,27 +58,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\lib\graphsynth\classes\candidate.py">
-      <Link>graphsynth\classes\candidate.py</Link>
-    </Compile>
-    <Compile Include="..\..\lib\graphsynth\classes\grammar_rule.py">
-      <Link>graphsynth\classes\grammar_rule.py</Link>
-    </Compile>
-    <Compile Include="..\..\lib\graphsynth\classes\option.py">
-      <Link>graphsynth\classes\option.py</Link>
-    </Compile>
-    <Compile Include="..\..\lib\graphsynth\classes\relaxation.py">
-      <Link>graphsynth\classes\relaxation.py</Link>
-    </Compile>
-    <Compile Include="..\..\lib\graphsynth\classes\ruleset.py">
-      <Link>graphsynth\classes\ruleset.py</Link>
-    </Compile>
-    <Compile Include="..\..\lib\graphsynth\classes\__init__.py">
-      <Link>graphsynth\classes\__init__.py</Link>
-    </Compile>
     <Compile Include="..\..\lib\graphsynth\__init__.py">
       <Link>graphsynth\__init__.py</Link>
     </Compile>
+    <Compile Include="graphsynth\classes\candidate.py" />
+    <Compile Include="graphsynth\classes\grammar_rule.py" />
+    <Compile Include="graphsynth\classes\option.py" />
+    <Compile Include="graphsynth\classes\ruleset.py" />
+    <Compile Include="graphsynth\classes\__init__.py" />
     <Compile Include="Program.py" />
   </ItemGroup>
   <ItemGroup>
