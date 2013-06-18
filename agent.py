@@ -27,6 +27,8 @@ import field
 
 class Agent(object):
 	#actions = #define class for this? No, use graphsynth if possible.
+
+	currentID = 0
 	def __init__(self, location):
 		if type(location) is tuple:
 			self.location = location
@@ -34,8 +36,9 @@ class Agent(object):
 		 	raise TypeError("Location should be a tuple of floats.")
 		#using benpy for graphs here, but maybe graphsynth is a 
 		#	better idea for now
-		self.truss_node = benpy.TrussNode(manager.truss_structure, identifier)
-		self._id = truss_node.ID
+		#self.truss_node = benpy.TrussNode(manager.truss_structure, identifier)
+		self._id = self.currentID #truss_node.ID
+		self.currentID += 1
 		self.proximity = None
 
 	def serialize(self):
@@ -43,8 +46,12 @@ class Agent(object):
 		#code this last
 		pass
 
-	def act(self, options):
-		"""choose-apply"""
+	def choose(self, options):
+		#return favorite option
+		pass
+
+	def act(self, option):
+		"""apply, needs to be written for any test system"""
 		#should there be a "big board," or should agents recognize locally?
 		pass
 
