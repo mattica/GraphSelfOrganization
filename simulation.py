@@ -31,13 +31,17 @@ class Simulation(object):
 	def run(self):
 		start = time.clock()
 		k = 0
+		positions = {ID: agent.location 
+					 for ID, agent in self.agents.iteritems()}
 		while not self.converged(k):
 			#options = graphsynth.recognize(self.graph, rules) #the big board
 			#options.build_agent_assignments()
-			for agent in random.shuffle(self.agents.itervalues()):
+			networkx.draw(self.graph, pos=positions)
+			for ID, agent in random.shuffle(self.agents.iteritems()):
 				#agent.choose(options[agent.ID])
 				#add options callback to remove already-used options
 				agent.act()
+				positions[ID] = agent.location
 			#self.environment.step()
 			k += 1
 		print("elapsed:", time.clock() - start)
