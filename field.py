@@ -21,7 +21,7 @@ import numpy
 
 
 def euclidean_distance(a, b):
-	return math.sqrt( sum(x-y for x, y in zip(a, b)) ) 
+	return math.sqrt( sum((x-y)**2 for x, y in zip(a, b)) ) 
 
 
 class InverseSquare(object):
@@ -57,6 +57,7 @@ class Field(object):
 	def __init__(self, agents, proximity=InverseSquare()):
 		self.agents = agents
 		self.proximity = proximity
+		self.points = {}
 		self.update()
 
 	def field_value(self, point, pointID=None):
@@ -70,8 +71,8 @@ class Field(object):
 
 	def update(self):
 		""" updates internal storage of point data """
-		for ID, agent in self.agents.iter_items():
-			self.points[key] = agent.location 
+		for ID, agent in self.agents.iteritems():
+			self.points[ID] = agent.location 
 
 
 class VectorField(Field):

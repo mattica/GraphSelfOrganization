@@ -16,11 +16,11 @@
 #
 #The author may be reached at jackhall@utexas.edu.
 
-import yaml
+#import yaml
 #import multiprocessing #will be used to split threads, avoiding the python GIL
 import random 
-import pygame
-import benpy
+#import pygame
+#import benpy
 
 import field
 
@@ -41,6 +41,10 @@ class Agent(object):
 		self.currentID += 1
 		self.proximity = None
 
+	@property
+	def ID(self):
+		return self._id
+
 	def serialize(self):
 		"""convert agent into a python dictionary for yaml"""
 		#code this last
@@ -53,7 +57,8 @@ class Agent(object):
 	def act(self, option):
 		"""apply, needs to be written for any test system"""
 		#should there be a "big board," or should agents recognize locally?
-		pass
+		D = self.proximity(self._id)
+		self.location = tuple(x - 0.1*d for x, d in zip(self.location, D))
 
 
 class BoundedUniform(object):
@@ -75,13 +80,13 @@ class BoundedUniform(object):
 			for a, b in new_bounds:
 				assert a < b
 		except:
-			raise ValueError("Bounds should be a sequence of pairs (a, b), 
-								where a < b.")
+			raise ValueError("Bounds should be a sequence of pairs (a, b)," 
+								+ "where a < b.")
 		self._bounds = new_bounds
 
 
 class AgentManager(object):
-	def __init__(self, location_generator=BoundedUniform(0.0, 1.0)):
+	def __init__(self, location_generator=BoundedUniform( ((0.0, 1.0),) )):
 		self.location_generator = location_generator
 		self._agents = {}
 		self.truss_structure = benpy.TrussGraph()
