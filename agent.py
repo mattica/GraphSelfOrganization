@@ -21,8 +21,8 @@
 import random 
 #import pygame
 #import benpy
-
-import field
+import networkx
+import field as fld
 
 
 class Agent(object):
@@ -54,10 +54,10 @@ class Agent(object):
 		#return favorite option
 		pass
 
-	def act(self, option):
+	def act(self, option=None):
 		"""apply, needs to be written for any test system"""
 		#should there be a "big board," or should agents recognize locally?
-		D = self.proximity(self._id)
+		D = self.proximity(self.location, self._id)
 		self.location = tuple(x - 0.1*d for x, d in zip(self.location, D))
 
 
@@ -86,16 +86,36 @@ class BoundedUniform(object):
 
 
 class AgentManager(object):
-	def __init__(self, location_generator=BoundedUniform( ((0.0, 1.0),) )):
+	def __init__(self, location_generator=BoundedUniform( ((0.0, 1.0),) ),
+				 	   field=None, graph=None):
 		self.location_generator = location_generator
-		self._agents = {}
-		self.truss_structure = benpy.TrussGraph()
-		self.field = field.MexicanHatField(self._agents)
+		self.agents = {}
+		#self.truss_structure = benpy.TrussGraph()
+		self.field = (fld.VectorField(self.agents, fld.MexicanHatGradient())
+						if field is None else field)
+		self.graph = networkx.Graph() if graph is None else graph
 
-	def spawn_agent(self):
+	def __getitem__(self, ID):
+		return self.agents[ID]
+
+	def positions(self):
+		return {ID: agent.location for ID, agent in self.agents.iteritems()}
+	
+	def spawn_agent(self, connectivity=0.2):
 		new_location = self.location_generator()
-		new_agent = Agent(self, new_location)
-		self._agents[new_agent.ID] = new_agent
+		new_agent = Agent(new_location)
+		new_agent.proximity = self.field.field_value
+		self.graph.add_node(new_agent.ID, agent=new_agent)
+		if connectivity < 1:
+			for ID, agent in self.agents.iteritems():
+				if random.random() < connectivity:
+					d = fld.euclidean_distance(new_agent.location, 
+											   agent.location)
+					self.graph.add_edge(new_agent.ID, ID)
+		else:
+			raise ValueError("connectivity is a probability")
+		self.agents[new_agent.ID] = new_agent
+		return new_agent
 
 	def step_all(self):
 		options = self.recognize()
