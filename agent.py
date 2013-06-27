@@ -38,7 +38,7 @@ class Agent(object):
 		#	better idea for now
 		#self.truss_node = benpy.TrussNode(manager.truss_structure, identifier)
 		self._id = self.currentID #truss_node.ID
-		self.currentID += 1
+		Agent.currentID += 1
 		self.proximity = None
 
 	@property

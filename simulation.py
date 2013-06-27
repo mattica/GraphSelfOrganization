@@ -2,6 +2,7 @@
 
 import time
 import random 
+import matplotlib.pylab as plt
 import networkx
 import field as fld
 import agent as agt
@@ -18,6 +19,8 @@ class Simulation(object):
 		#self.rules = #or some graphsynth object to encapusulate more details
 
 	def run(self):
+		fig = plt.figure()
+		ax = fig.add_subplot()
 		start = time.clock()
 		k = 0
 		positions = self.manager.positions()
@@ -25,7 +28,7 @@ class Simulation(object):
 			#options = graphsynth.recognize(self.graph, rules) #the big board
 			#options.build_agent_assignments()
 			self.manager.field.update()
-			networkx.draw(self.manager.graph, pos=positions)
+			networkx.draw(self.manager.graph, pos=positions, ax=ax) 
 			agent_queue = self.manager.agents.items()
 			random.shuffle(agent_queue)
 			for ID, agent in agent_queue:
