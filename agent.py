@@ -58,7 +58,7 @@ class Agent(object):
 		"""apply, needs to be written for any test system"""
 		#should there be a "big board," or should agents recognize locally?
 		D = self.proximity(self.location, self._id)
-		self.location = tuple(x - 0.1*d for x, d in zip(self.location, D))
+		self.location = tuple(x + 0.1*d for x, d in zip(self.location, D))
 
 
 class BoundedUniform(object):
@@ -91,7 +91,7 @@ class AgentManager(object):
 		self.location_generator = location_generator
 		self.agents = {}
 		#self.truss_structure = benpy.TrussGraph()
-		self.field = (fld.VectorField(self.agents, fld.MexicanHatGradient())
+		self.field = (fld.VectorField(self.agents, fld.MexicanHat(5))
 						if field is None else field)
 		self.graph = networkx.Graph() if graph is None else graph
 
