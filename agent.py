@@ -101,8 +101,11 @@ class AgentManager(object):
 	def positions(self):
 		return {ID: agent.location for ID, agent in self.agents.iteritems()}
 	
-	def spawn_agent(self, connectivity=0.2):
-		new_location = self.location_generator()
+	def spawn_agent(self, connectivity=0.2, location=None):
+		if location is None:
+			new_location = self.location_generator()
+		else:
+			new_location = location
 		new_agent = Agent(new_location)
 		new_agent.proximity = self.field.field_value
 		self.graph.add_node(new_agent.ID, agent=new_agent)
