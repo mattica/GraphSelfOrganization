@@ -38,25 +38,28 @@ class MexicanHat(object):
 		self.sigma = sigma
 	
 	def __call__(self, a, b):
-		distance = euclidean_distance(a, b)
+		distance = numpy.linalg.norm(a - b)
 		d_norm = (distance / self.sigma)**2
 		return ( (1 - d_norm) * math.exp(-0.5*d_norm) *
 				2/(math.sqrt(3.0*self.sigma) * math.pi**0.25) )
 
 
 class MexicanHatGradient(MexicanHat):
+	""" assumes that arguments are numpy arrays of equal length """
 	def __call__(self, a, b):
-		distance = euclidean_distance(a,b)
+		c = b-a #requires elementwise arithmetic
+		distance = numpy.linalg.norm(c)
 		d_norm = (distance / self.sigma)**2
-		return ( (distance**3 - 3*distance*self.sigma**2) * 
-				  math.exp(-0.5*d_norm) * 2 / (math.sqrt(3.0) *
-				  math.pi**0.25 * self.sigma**4.5) )
+		magnitude = ( (distance**3 - 3*distance*self.sigma**2) * 
+				  		math.exp(-0.5*d_norm) * 2 / (math.sqrt(3.0) *
+						math.pi**0.25 * self.sigma**4.5) )
+		return magnitude*c #also needs elementwise operations
 
 
 class Field(object):
-	def __init__(self, agents, proximity=InverseSquare()):
+	def __init__(self, agents, function=InverseSquare()):
 		self.agents = agents
-		self.proximity = proximity
+		self.function = function
 		self.points = {}
 		self.update()
 
@@ -66,13 +69,13 @@ class Field(object):
 		result = 0
 		for ID, location in self.points.iteritems():
 			if ID is not pointID:
-				result += self.proximity(point, location)
+				result += self.function(point, location)
 		return result
 
 	def update(self):
 		""" updates internal storage of point data """
 		for ID, agent in self.agents.iteritems():
-			self.points[ID] = agent.location 
+			self.points[ID] = numpy.array(agent.location)
 
 
 class VectorField(Field):
@@ -83,12 +86,10 @@ class VectorField(Field):
 		p = numpy.array(point)
 		result = numpy.zeros(len(p))
 		for ID, location in self.points.iteritems():
-			#Compute the euclidian distance
-			magnitude = self.proximity(p, location)
 			if ID is not pointID:
 				#Vector difference should point away from each location.
 				#difference depends on elementwise operations like numpy.array
-				result += magnitude * (p - location) 
+				result += self.function(p, location)
 		return result
 	
 

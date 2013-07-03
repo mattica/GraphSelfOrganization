@@ -24,6 +24,21 @@ import random
 import networkx
 import field as fld
 
+def spread(agent):
+	D = agent.proximity(agent.location, agent._id)
+	agent.location = tuple(x + 0.1*d for x, d in zip(agent.location, D))
+
+
+class NormalizeLinks(object):
+	def __init__(self, manager):
+		self.manager = manager
+
+	def __call__(self, agent):
+		pass
+		#loop over links
+		#	build a weighted average from linked agents' locations
+		#assign that weighted average to agent.location
+
 
 class Agent(object):
 	#actions = #define class for this? No, use graphsynth if possible.
@@ -54,11 +69,10 @@ class Agent(object):
 		#return favorite option
 		pass
 
-	def act(self, option=None):
+	def act(self, option=spread):
 		"""apply, needs to be written for any test system"""
 		#should there be a "big board," or should agents recognize locally?
-		D = self.proximity(self.location, self._id)
-		self.location = tuple(x + 0.1*d for x, d in zip(self.location, D))
+		option(self)
 
 
 class BoundedUniform(object):
@@ -91,7 +105,7 @@ class AgentManager(object):
 		self.location_generator = location_generator
 		self.agents = {}
 		#self.truss_structure = benpy.TrussGraph()
-		self.field = (fld.VectorField(self.agents, fld.MexicanHat(5))
+		self.field = (fld.VectorField(self.agents, fld.MexicanHatGradient(3))
 						if field is None else field)
 		self.graph = networkx.Graph() if graph is None else graph
 
