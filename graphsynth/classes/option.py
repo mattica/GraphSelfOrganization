@@ -151,32 +151,11 @@ class option(object):
 
 	probability = property(fget=get_probability, fset=set_probability)
 
-	def get_Relaxations(self):
-		# <summary>
-		# Gets or sets the relaxations.
-		# </summary>
-		# <value>
-		# The relaxations.
-		# </value>
-		return self._relaxations == (self._relaxations = Relaxation())
-
-	def set_Relaxations(self, value):
-		self._relaxations = value
-
-	Relaxations = property(fget=get_Relaxations, fset=set_Relaxations)
-
 	def __init__(self):
 		""" <summary>
 		 Initializes a new instance of the <see cref="option"/> class.
 		 </summary>
 		 <param name="rule">The rule.</param>
-		"""
-		self._parameters = List[Double]()
-
-	def __init__(self):
-		""" <summary>
-		 Initializes a new instance of the <see cref="option"/> class.
-		 </summary>
 		"""
 		self._parameters = List[Double]()
 
