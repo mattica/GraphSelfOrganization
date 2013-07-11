@@ -20,7 +20,7 @@ class Simulation(object):
 
 	def run(self):
 		plt.ion()
-		print "running..."
+		#print "running..."
 		#fig = plt.figure()
 		#ax = fig.add_subplot()
 		start = time.clock()

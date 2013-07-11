@@ -34,9 +34,7 @@ class NormalizeLinks(object):
 		self.manager = manager
 
 	def __call__(self, agent):
-		#loop over links
-		#	build a weighted average from linked agents' locations
-		#assign that weighted average to agent.location
+		#apparently doing nothing?
 		num_links = 0
 		position_sum = numpy.zeros(2)
 		for a, b in self.manager.graph.edges_iter(agent.ID):
@@ -73,7 +71,8 @@ class Agent(object):
 
 	def choose(self, options):
 		#return favorite option
-		return random.choice(options) #uniform random for now
+		#return random.choice(options) #uniform random for now
+		return options[1]
 
 	def act(self, option=spread):
 		"""apply, needs to be written for any test system"""
