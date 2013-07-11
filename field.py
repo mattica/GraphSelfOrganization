@@ -20,16 +20,12 @@ import math
 import numpy
 
 
-def euclidean_distance(a, b):
-	return math.sqrt( sum((x-y)**2 for x, y in zip(a, b)) ) 
-
-
 class InverseSquare(object):
 	def __init__(self, height=1.0):
 		self.height = height
 
 	def __call__(self, a, b):
-		return self.height / (euclidean_distance(a, b)**2)
+		return self.height / (numpy.linalg.norm(b-a)**2)
 
 
 class MexicanHat(object):
@@ -75,7 +71,7 @@ class Field(object):
 	def update(self):
 		""" updates internal storage of point data """
 		for ID, agent in self.agents.iteritems():
-			self.points[ID] = numpy.array(agent.location)
+			self.points[ID] = agent.location
 
 
 class VectorField(Field):
@@ -83,13 +79,12 @@ class VectorField(Field):
 		""" Returns the vector (numpy array) corresponding to the
 			given point. If a pointID is provided, that agent is
 			ignored. Expects agent locations to also be numpy arrays."""
-		p = numpy.array(point)
-		result = numpy.zeros(len(p))
+		result = numpy.zeros(len(point))
 		for ID, location in self.points.iteritems():
 			if ID is not pointID:
 				#Vector difference should point away from each location.
 				#difference depends on elementwise operations like numpy.array
-				result += self.function(p, location)
+				result += self.function(point, location)
 		return result
 	
 

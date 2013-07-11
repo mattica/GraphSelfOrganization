@@ -19,12 +19,14 @@ class Simulation(object):
 		#self.rules = #or some graphsynth object to encapusulate more details
 
 	def run(self):
-		#plt.ion()
+		plt.ion()
+		print "running..."
 		#fig = plt.figure()
 		#ax = fig.add_subplot()
 		start = time.clock()
 		k = 0
 		positions = self.manager.positions()
+		options = [agt.spread, agt.NormalizeLinks(self.manager)]
 		while not self.converged(k):
 			#options = graphsynth.recognize(self.graph, rules) #the big board
 			#options.build_agent_assignments()
@@ -40,8 +42,9 @@ class Simulation(object):
 			for ID, agent in agent_queue:
 				#agent.choose(options[agent.ID])
 				#add options callback to remove already-used options
-				agent.act()
-				positions[ID] = agent.location
+				choice = agent.choose(options)
+				agent.act(choice)
+				positions[ID] = agent.location.tolist()
 			#self.environment.step()
 			k += 1
 		print "elapsed:", time.clock() - start

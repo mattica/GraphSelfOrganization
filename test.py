@@ -24,7 +24,7 @@ import field as fld
 #plt.show()
 
 
-sim = simulation.Simulation(num_agents=20, iterations=50, connectivity=.2)
+sim = simulation.Simulation(num_agents=20, iterations=50, connectivity=.5)
 sim.run()
 #raw_input("Press Enter to end...")
 

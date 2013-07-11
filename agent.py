@@ -26,8 +26,7 @@ import networkx
 import field as fld
 
 def spread(agent):
-	D = agent.proximity(agent.location, agent.ID)
-	agent.location = tuple(x + 0.1*d for x, d in zip(agent.location, D))
+	agent.location += 0.1*agent.proximity(agent.location, agent.ID)
 
 
 class NormalizeLinks(object):
@@ -52,10 +51,10 @@ class Agent(object):
 
 	currentID = 0
 	def __init__(self, location):
-		if type(location) is tuple:
+		if type(location) is numpy.ndarray:
 			self.location = location
 		else:
-		 	raise TypeError("Location should be a tuple of floats.")
+		 	raise TypeError("Location should be a numpy array.")
 		#using benpy for graphs here, but maybe graphsynth is a 
 		#	better idea for now
 		#self.truss_node = benpy.TrussNode(manager.truss_structure, identifier)
@@ -74,8 +73,7 @@ class Agent(object):
 
 	def choose(self, options):
 		#return favorite option
-		#random.random
-		pass
+		return random.choice(options) #uniform random for now
 
 	def act(self, option=spread):
 		"""apply, needs to be written for any test system"""
@@ -90,7 +88,10 @@ class BoundedUniform(object):
 		self.bounds = bounds
 
 	def __call__(self):
-		return tuple(random.uniform(a,b) for a, b in self.bounds)
+		result = numpy.zeros(len(self.bounds))
+		for i, interval in enumerate(self.bounds):
+			result[i] = random.uniform(*interval) 
+		return result
 
 	@property
 	def bounds(self):
@@ -121,7 +122,8 @@ class AgentManager(object):
 		return self.agents[ID]
 
 	def positions(self):
-		return {ID: agent.location for ID, agent in self.agents.iteritems()}
+		return {ID: agent.location.tolist() 
+				for ID, agent in self.agents.iteritems()}
 	
 	def spawn_agent(self, connectivity=0.2, location=None):
 		if location is None:
@@ -134,8 +136,7 @@ class AgentManager(object):
 		if connectivity < 1:
 			for ID, agent in self.agents.iteritems():
 				if random.random() < connectivity:
-					d = fld.euclidean_distance(new_agent.location, 
-											   agent.location)
+					d = numpy.linalg.norm(new_agent.location - agent.location)
 					self.graph.add_edge(new_agent.ID, ID)
 		else:
 			raise ValueError("connectivity is a probability")
