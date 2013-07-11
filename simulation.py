@@ -19,7 +19,7 @@ class Simulation(object):
 		#self.rules = #or some graphsynth object to encapusulate more details
 
 	def run(self):
-		plt.ion()
+		#plt.ion()
 		#fig = plt.figure()
 		#ax = fig.add_subplot()
 		start = time.clock()

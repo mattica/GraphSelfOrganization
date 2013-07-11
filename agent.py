@@ -19,13 +19,14 @@
 #import yaml
 #import multiprocessing #will be used to split threads, avoiding the python GIL
 import random 
+import numpy
 #import pygame
 #import benpy
 import networkx
 import field as fld
 
 def spread(agent):
-	D = agent.proximity(agent.location, agent._id)
+	D = agent.proximity(agent.location, agent.ID)
 	agent.location = tuple(x + 0.1*d for x, d in zip(agent.location, D))
 
 
@@ -34,11 +35,17 @@ class NormalizeLinks(object):
 		self.manager = manager
 
 	def __call__(self, agent):
-		pass
 		#loop over links
 		#	build a weighted average from linked agents' locations
 		#assign that weighted average to agent.location
-
+		num_links = 0
+		position_sum = numpy.zeros(2)
+		for a, b in self.manager.graph.edges_iter(agent.ID):
+			other = self.manager[a] if a == agent.ID else self.manager[b]
+			position_sum += other.location
+			num_links += 1
+		agent.location = position_sum / num_links
+				
 
 class Agent(object):
 	#actions = #define class for this? No, use graphsynth if possible.
@@ -67,6 +74,7 @@ class Agent(object):
 
 	def choose(self, options):
 		#return favorite option
+		#random.random
 		pass
 
 	def act(self, option=spread):
