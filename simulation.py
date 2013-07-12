@@ -26,7 +26,8 @@ class Simulation(object):
 		start = time.clock()
 		k = 0
 		positions = self.manager.positions()
-		options = [agt.spread, agt.NormalizeLinks(self.manager)]
+		options = [agt.Spread(), 
+				   agt.NormalizeLinks(self.manager, step=0.2)]
 		while not self.converged(k):
 			#options = graphsynth.recognize(self.graph, rules) #the big board
 			#options.build_agent_assignments()

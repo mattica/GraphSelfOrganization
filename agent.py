@@ -25,23 +25,28 @@ import numpy
 import networkx
 import field as fld
 
-def spread(agent):
-	agent.location += 0.1*agent.proximity(agent.location, agent.ID)
+class Spread(object):
+	def __init__(self, step=0.3):
+		self.step = step
+
+	def __call__(self, agent):
+		agent.location += self.step*agent.proximity(agent.location, agent.ID)
 
 
 class NormalizeLinks(object):
-	def __init__(self, manager):
+	def __init__(self, manager, step=0.3):
 		self.manager = manager
+		self.step = step
 
 	def __call__(self, agent):
-		#apparently doing nothing?
 		num_links = 0
 		position_sum = numpy.zeros(2)
 		for a, b in self.manager.graph.edges_iter(agent.ID):
-			other = self.manager[a] if a == agent.ID else self.manager[b]
+			other = self.manager[b] if a == agent.ID else self.manager[a]
 			position_sum += other.location
 			num_links += 1
-		agent.location = position_sum / num_links
+		target = position_sum / num_links
+		agent.location += self.step*(target - agent.location)
 				
 
 class Agent(object):
@@ -71,10 +76,10 @@ class Agent(object):
 
 	def choose(self, options):
 		#return favorite option
-		#return random.choice(options) #uniform random for now
-		return options[1]
+		return random.choice(options) #uniform random for now
+		#return options[1]
 
-	def act(self, option=spread):
+	def act(self, option):
 		"""apply, needs to be written for any test system"""
 		#should there be a "big board," or should agents recognize locally?
 		option(self)
@@ -153,4 +158,5 @@ class AgentManager(object):
 		""" Build and return the big board of options.
 			The returned object should overload __getitem__."""
 		pass
+
 
