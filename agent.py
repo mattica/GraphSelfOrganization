@@ -25,6 +25,8 @@ import numpy
 import networkx
 import field as fld
 
+#make sure methods have verbs, attributes have nouns!
+
 class Spread(object):
 	def __init__(self, step=0.3):
 		self.step = step
@@ -69,16 +71,18 @@ class Agent(object):
 	def ID(self):
 		return self._id
 
+	#remove, to be defined later by user
 	def serialize(self):
 		"""convert agent into a python dictionary for yaml"""
 		#code this last
 		pass
 
 	def choose(self, options):
-		#return favorite option
+		#return favorite option (what is allowed for this part of the concept?)
 		return random.choice(options) #uniform random for now
 		#return options[1]
 
+	#remove, just call option
 	def act(self, option):
 		"""apply, needs to be written for any test system"""
 		#should there be a "big board," or should agents recognize locally?
@@ -111,7 +115,7 @@ class BoundedUniform(object):
 								+ "where a < b.")
 		self._bounds = new_bounds
 
-
+#remove and roll back into simulation.py
 class AgentManager(object):
 	def __init__(self, location_generator=BoundedUniform( ((0.0, 1.0),) ),
 				 	   field=None, graph=None):
@@ -154,6 +158,7 @@ class AgentManager(object):
 		for ID, agent in pairs:
 			agent.act(options[ID])
 
+	#remove, this is part of ruleset
 	def recognize(self):
 		""" Build and return the big board of options.
 			The returned object should overload __getitem__."""
