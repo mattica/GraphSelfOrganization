@@ -52,30 +52,19 @@ class NormalizeLinks(object):
 				
 
 class Agent(object):
-	#actions = #define class for this? No, use graphsynth if possible.
-
-	currentID = 0
-	def __init__(self, location):
+	_currentID = 0
+	def __init__(self, location, field=None):
 		if type(location) is numpy.ndarray:
 			self.location = location
 		else:
-		 	raise TypeError("Location should be a numpy array.")
-		#using benpy for graphs here, but maybe graphsynth is a 
-		#	better idea for now
-		#self.truss_node = benpy.TrussNode(manager.truss_structure, identifier)
-		self._id = self.currentID #truss_node.ID
-		Agent.currentID += 1
-		self.proximity = None
+			self.location = numpy.array(location)
+		self._id = self._currentID 
+		Agent._currentID += 1
+		self.field_callback = field
 
 	@property
 	def ID(self):
 		return self._id
-
-	#remove, to be defined later by user
-	def serialize(self):
-		"""convert agent into a python dictionary for yaml"""
-		#code this last
-		pass
 
 	def choose(self, options):
 		#return favorite option (what is allowed for this part of the concept?)
@@ -87,81 +76,5 @@ class Agent(object):
 		"""apply, needs to be written for any test system"""
 		#should there be a "big board," or should agents recognize locally?
 		option(self)
-
-
-class BoundedUniform(object):
-	def __init__(self, bounds):
-		#upper and lower may be sequences
-		#if they are, this generator provides a sequence of values
-		self.bounds = bounds
-
-	def __call__(self):
-		result = numpy.zeros(len(self.bounds))
-		for i, interval in enumerate(self.bounds):
-			result[i] = random.uniform(*interval) 
-		return result
-
-	@property
-	def bounds(self):
-		return self._bounds
-	
-	@bounds.setter
-	def bounds(self, new_bounds):
-		try:
-			for a, b in new_bounds:
-				assert a < b
-		except:
-			raise ValueError("Bounds should be a sequence of pairs (a, b)," 
-								+ "where a < b.")
-		self._bounds = new_bounds
-
-#remove and roll back into simulation.py
-class AgentManager(object):
-	def __init__(self, location_generator=BoundedUniform( ((0.0, 1.0),) ),
-				 	   field=None, graph=None):
-		self.location_generator = location_generator
-		self.agents = {}
-		#self.truss_structure = benpy.TrussGraph()
-		self.field = (fld.VectorField(self.agents, fld.MexicanHatGradient(3))
-						if field is None else field)
-		self.graph = networkx.Graph() if graph is None else graph
-
-	def __getitem__(self, ID):
-		return self.agents[ID]
-
-	def positions(self):
-		return {ID: agent.location.tolist() 
-				for ID, agent in self.agents.iteritems()}
-	
-	def spawn_agent(self, connectivity=0.2, location=None):
-		if location is None:
-			new_location = self.location_generator()
-		else:
-			new_location = location
-		new_agent = Agent(new_location)
-		new_agent.proximity = self.field.field_value
-		self.graph.add_node(new_agent.ID, agent=new_agent)
-		if connectivity < 1:
-			for ID, agent in self.agents.iteritems():
-				if random.random() < connectivity:
-					d = numpy.linalg.norm(new_agent.location - agent.location)
-					self.graph.add_edge(new_agent.ID, ID)
-		else:
-			raise ValueError("connectivity is a probability")
-		self.agents[new_agent.ID] = new_agent
-		return new_agent
-
-	def step_all(self):
-		options = self.recognize()
-		pairs = list(self.agents.iter_items())
-		random.shuffle(pairs)
-		for ID, agent in pairs:
-			agent.act(options[ID])
-
-	#remove, this is part of ruleset
-	def recognize(self):
-		""" Build and return the big board of options.
-			The returned object should overload __getitem__."""
-		pass
 
 
