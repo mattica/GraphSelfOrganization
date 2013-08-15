@@ -32,19 +32,21 @@ class Spread(object):
 		self.step = step
 
 	def __call__(self, agent):
-		agent.location += self.step*agent.proximity(agent.location, agent.ID)
+		agent.location += self.step * agent.field_callback(agent.location, 
+														   agent.ID)
 
 
 class NormalizeLinks(object):
-	def __init__(self, manager, step=0.3):
-		self.manager = manager
+	def __init__(self, graph, agents, step=0.3):
+		self.graph = graph
+		self.agents = agents
 		self.step = step
 
 	def __call__(self, agent):
 		num_links = 0
 		position_sum = numpy.zeros(2)
-		for a, b in self.manager.graph.edges_iter(agent.ID):
-			other = self.manager[b] if a == agent.ID else self.manager[a]
+		for a, b in self.graph.edges_iter(agent.ID):
+			other = self.agents[b] if a == agent.ID else self.agents[a]
 			position_sum += other.location
 			num_links += 1
 		target = position_sum / num_links
@@ -53,14 +55,14 @@ class NormalizeLinks(object):
 
 class Agent(object):
 	_currentID = 0
-	def __init__(self, location, field=None):
+	def __init__(self, location, field_callback=None):
 		if type(location) is numpy.ndarray:
 			self.location = location
 		else:
 			self.location = numpy.array(location)
 		self._id = self._currentID 
 		Agent._currentID += 1
-		self.field_callback = field
+		self.field_callback = field_callback
 
 	@property
 	def ID(self):
