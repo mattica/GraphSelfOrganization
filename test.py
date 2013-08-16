@@ -4,7 +4,6 @@ import time
 import numpy
 import matplotlib.pyplot as plt
 import simulation
-import field as fld
 
 ##test mexican hat and its gradient
 #x, y = numpy.meshgrid(numpy.linspace(-6.0, 6.0, 20), 

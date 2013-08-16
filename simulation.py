@@ -5,11 +5,9 @@ import random
 import numpy
 import matplotlib.pyplot as plt
 import networkx
-import field as fld
-import agent as agt
-
-#set up folder architecture to leave space for user-defined agents, rules, etc.
-#relative imports to reflect subfolders
+import fields.field as fld
+import agents.agent as agt
+import rulesets.rules as rules
 
 class BoundedUniform(object):
 	"""
@@ -74,18 +72,21 @@ class Simulation(object):
 
 		#This field depends on the environment.
 		#MAKE A NEW FIELD HERE
-
-		self.ruleset = [] 	#Rule objects should have a recognize method
-							#that returns a list of options. Agents will
-							#choose from ALL options.
+		
+		#Rule objects should have a recognize method
+		#that returns a list of options. Agents will
+		#choose from ALL options.
+		self.ruleset = [rules.Spread(step=0.3), 
+				   		rules.NormalizeLinks(self.graph, step=0.2)]
 
 		#Populate the dict of agents...
 		#agents = {spawn_agent() for i in range(num_agents)} #using a set?
 		for i in range(num_agents):
 			self.spawn_agent()
 
-	def spawn_agent(self, location=self.location_generator()):
-		new_agent = agt.Agent(location, self.field.field_value)
+	def spawn_agent(self, location=None):
+		new_location = location or self.location_generator()
+		new_agent = agt.Agent(new_location, self.field.field_value)
 		self.graph.add_node(new_agent.ID, agent=new_agent)
 		for ID, agent in self.agents.iteritems():
 			#Create an link with probability = connectivity.
@@ -102,8 +103,6 @@ class Simulation(object):
 		positions = {ID: agent.location.tolist() 
 					 for ID, agent in self.agents.iteritems()}
 		#no rules yet, but add them as a skeleton
-		options = [agt.Spread(), 
-				   agt.NormalizeLinks(self.graph, self.agents, step=0.2)]
 
 		#main simulation loop
 		while not self.converged(iteration):
@@ -118,7 +117,9 @@ class Simulation(object):
 			self.field.update()
 
 			#generate list (one element/rule) of lists of options
-			options = [rule.recognize() for rule in self.ruleset]
+			options = []
+			for rule in self.ruleset:
+				options.extend(rule.recognize(self.graph))
 
 			#plt.show() #needed only if matplotlib interactive mode is off
 			agent_queue = self.agents.items() #actually need the list here

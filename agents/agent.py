@@ -23,35 +23,6 @@ import numpy
 #import pygame
 #import benpy
 import networkx
-import field as fld
-
-#make sure methods have verbs, attributes have nouns!
-
-class Spread(object):
-	def __init__(self, step=0.3):
-		self.step = step
-
-	def __call__(self, agent):
-		agent.location += self.step * agent.field_callback(agent.location, 
-														   agent.ID)
-
-
-class NormalizeLinks(object):
-	def __init__(self, graph, agents, step=0.3):
-		self.graph = graph
-		self.agents = agents
-		self.step = step
-
-	def __call__(self, agent):
-		num_links = 0
-		position_sum = numpy.zeros(2)
-		for a, b in self.graph.edges_iter(agent.ID):
-			other = self.agents[b] if a == agent.ID else self.agents[a]
-			position_sum += other.location
-			num_links += 1
-		target = position_sum / num_links
-		agent.location += self.step*(target - agent.location)
-				
 
 class Agent(object):
 	_currentID = 0
@@ -69,14 +40,9 @@ class Agent(object):
 		return self._id
 
 	def choose(self, options):
-		#return favorite option (what is allowed for this part of the concept?)
-		return random.choice(options) #uniform random for now
-		#return options[1]
-
-	#remove, just call option
-	def act(self, option):
-		"""apply, needs to be written for any test system"""
-		#should there be a "big board," or should agents recognize locally?
-		option(self)
+		#Determine which options apply to this agent.
+		applicable = [option for option in options if self.ID in option]
+		#Return favorite option.
+		return random.choice(applicable) #uniform random for now
 
 
