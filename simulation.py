@@ -56,6 +56,8 @@ class Simulation(object):
 										 else 1.0/connectivity)
 
 		#The default networkx graph is simple and undirected, empty by default. 
+		#Agent IDs serve as the nodes, and each agent object is associated with
+		#its node in the graph. See the networkx docs for details.
 		self.graph = networkx.Graph()
 
 		#The environment encapuslates any behavior that does not concern 
@@ -76,7 +78,7 @@ class Simulation(object):
 		#Rule objects should have a recognize method
 		#that returns a list of options. Agents will
 		#choose from ALL options.
-		self.ruleset = [rules.Spread(step=0.3), 
+		self.ruleset = [rules.Spread(self.field, step=0.3), 
 				   		rules.NormalizeLinks(self.graph, step=0.2)]
 
 		#Populate the dict of agents...
@@ -85,38 +87,48 @@ class Simulation(object):
 			self.spawn_agent()
 
 	def spawn_agent(self, location=None):
+		#Generate a location if none was given, and use it to instantiate 
+		#the new agent.
 		new_location = location or self.location_generator()
-		new_agent = agt.Agent(new_location, self.field.field_value)
+		new_agent = agt.Agent(new_location)
+
+		#Add the new agent to the graph.
 		self.graph.add_node(new_agent.ID, agent=new_agent)
 		for ID, agent in self.agents.iteritems():
 			#Create an link with probability = connectivity.
 			if random.random() < self.connectivity:
-				#d = numpy.linalg.norm(new_agent.location - agent.location)
 				self.graph.add_edge(new_agent.ID, ID)
+
+		#Add the new agent to the address dict. Doing this after adding it
+		#to the graph means that no self-links are created.
 		self.agents[new_agent.ID] = new_agent
 		return new_agent
 
 	def run(self):
-		plt.ion()
+		#Turn on interactive plotting (automatically update plots).
+		plt.ion() 
+
+		#Record the current time for comparison after the simulation.
 		start = time.clock() #for timing the algorithm
-		iteration = 0
+
+		#Create a dict of agent positions. Need this for networkx plotting.
 		positions = {ID: agent.location.tolist() 
 					 for ID, agent in self.agents.iteritems()}
-		#no rules yet, but add them as a skeleton
 
 		#main simulation loop
+		iteration = 0
 		while not self.converged(iteration):
-			#plot state
+			#Plot the state of the simulation (agents + environment).
 			plt.hold(False)
-			networkx.draw(self.graph, pos=positions) #sole use of positions
+			networkx.draw(self.graph, pos=positions) #sole use of 'positions'
 			plt.xlim((-10,10)) #these should come from environment
 			plt.ylim((-10,10))
 			plt.draw()
 
-			#update [proximity] field
-			self.field.update()
+			#Update [proximity] field.
+			self.field.update(self.agents)
 
-			#generate list (one element/rule) of lists of options
+			#Generate list (one element/rule) of lists of options.
 			options = []
 			for rule in self.ruleset:
 				options.extend(rule.recognize(self.graph))
