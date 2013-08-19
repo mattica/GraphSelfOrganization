@@ -101,7 +101,7 @@ class Simulation(object):
 		#location_generator is a functor that samples from a probability 
 		#distribution; it's used to initialize agent locations.
 		location_bounds = (self.environment.bounds + 
-						   numpy.array([[1, -1], [1, -1]])) #margins
+						   numpy.array([[2, -2], [2, -2]])) #margins
 		self.location_generator = BoundedUniform(location_bounds) 
 
 		#A field is a function with a unique value for each position. This 
@@ -187,6 +187,6 @@ class Simulation(object):
 
 def run():
 	""" Show an example simulation. """
-	sim = simulation.Simulation(num_agents=20, max_iterations=40, connectivity=.3)
+	sim = Simulation(num_agents=20, max_iterations=40, connectivity=.3)
 	sim.run()
 
