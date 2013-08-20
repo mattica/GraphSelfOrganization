@@ -48,6 +48,8 @@ A graph is a network between agents. The nodes and links may have information as
 
 Advice: Some of the most complicated logic in this research can arise from options that attempt to simultaneously mutate a graph. Keep your graph grammar rules simple. (Simple rules tend to be local.)
 
+
 written by Jack Hall, University of Texas at Austin, August 2013
+
 email: jackhall@utexas.edu
 
