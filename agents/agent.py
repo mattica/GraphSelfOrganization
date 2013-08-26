@@ -33,6 +33,9 @@ class Agent(object):
 	"""
 	_currentID = 0
 	def __init__(self, location):
+		"""
+		Set location and generate a unique ID.
+		"""
 		#Make sure that location is a numpy array.
 		if type(location) is numpy.ndarray:
 			self.location = location

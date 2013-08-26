@@ -23,12 +23,12 @@ The code here so far does not solve any engineering problem, but it does demonst
 
 An agent is an entity that represents some part of a design and acts to improve that design - the 'Cell' in Cellular Self-Organization. It makes decisions based on its environment and the surrounding agents. An example agent object may be found in agents/agent.py. 
 
-Advice: keep each agent's influence and knowledge as local as possible. As each agent gains more influence, the aggregate behavior becomes more difficult to analyze, predict, or design. An explicit local utility function is not included in this example implementation, but that might be useful. Note: this example makes all decisions randomly, which is almost certainly not what you want. 
+Advice: Keep each agent's influence and knowledge as local as possible. As each agent gains more influence, the aggregate behavior becomes more difficult to analyze, predict, or design. An explicit local utility function is not included in this example implementation, but that might be useful. Note: this example makes all decisions randomly, which is almost certainly not what you want. 
 
 
 **Rules and Options**
 
-A rule is a template for agent choices, and an option is a potential agent action and an instance of a rule. A rule may say, "If an agent sees X, then it may be beneficial to do Y." An option says, "It may be beneficial for agent A to do Y." While in traditional design optimization only one option is chosen at each step, in CSO giving each agent a choice at each step is more natural. 
+A rule is a template for agent choices, and an option is a potential agent action and an instance of a rule. A rule may say, "If an agent sees X, then it could potentially do Y." An option says, "It is possible for agent A to do Y." While in traditional design optimization only one option is chosen at each step, in CSO giving each agent a choice at each step is more natural. 
 
 A rule is responsible for recognizing where it can apply and generating an option for each potential application of itself. Example code for rules and options may be found in rulesets/rules.py. I have written rules coupled to a field and a graph, respectively. The environmental penalty function in simulation.py may also be considered a rule, even though the agent has no choice but to apply it. 
 
@@ -39,7 +39,7 @@ Advice: Options may conflict with other options or with themselves, so logic to 
 
 A field is a mathematical function whose domain is the space over which the agents move. Probably this is directly analogous to physical space, but it doesn't have to be. A field may map that space into scalar or vector quantities, as long as that quantity is unique for a given point in space. A field may arise from the environment (the penalty field in simulation.py), other agents (Field and VectorField in fields/field.py), some known goal information, or even a graph - maybe each link creates a local field. In the examples here, the field directly affects agent movement, but you may also treat a field as sensory information that aids agent decision-making. 
 
-Advice: The main way you can tell if some effect counts as a field is to ask this question, "If this agent sees value X at this point in the domain, would another agent also see value X at this point?". If the answer is no - for instance if the value an agent sees depends on what other agents it's connected to - then you aren't dealing with a field. (That doesn't mean whatever you're dealing with isn't useful, though.) To reiterate some advice from the agent section: Try to keep field effects local if you can. 
+Advice: The main way you can tell if some effect counts as a field is to ask this question, "If agent A sees value X at this point in the domain, would agent B also see value X at this point?". If the answer is no - for instance if the value an agent sees depends on what other agents it's connected to - then you aren't dealing with a field. (That doesn't mean whatever you're dealing with isn't useful, though. It could be a morphogen, for instance.) To reiterate some advice from the agent section: Try to keep field effects local if you can. 
 
 
 **Graphs**

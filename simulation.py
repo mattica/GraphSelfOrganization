@@ -123,6 +123,10 @@ class Simulation(object):
 			self.spawn_agent()
 
 	def spawn_agent(self, location=None):
+		"""
+		Create a new agent, adding it to the graph, connecting it to other agents.
+		Only called from __init__ at the moment.
+		"""
 		#Generate a location if none was given, and use it to instantiate 
 		#the new agent.
 		new_location = location or self.location_generator()
@@ -141,6 +145,9 @@ class Simulation(object):
 		return new_agent
 
 	def run(self):
+		"""
+		Run the simulation and plot an animation of the results.
+		"""
 		#Turn on interactive plotting (automatically update plots).
 		plt.ion() 
 
@@ -173,7 +180,9 @@ class Simulation(object):
 			agent_queue = self.agents.items() #actually need the list here
 			random.shuffle(agent_queue)
 			for ID, agent in agent_queue:
+				#involuntary penalty function from environment
 				agent.location += self.environment.field_value(agent.location)
+				#make and apply each agent's decision
 				choice = agent.choose(options)
 				choice.apply(agent)
 				positions[ID] = agent.location.tolist() #updates plot positions
@@ -182,10 +191,11 @@ class Simulation(object):
 		print "elapsed:", time.clock() - start
 
 	def converged(self, current_iteration):
+		""" Just check for the iteration limit for now. """
 		return current_iteration > self.max_iterations
 
 
-def run():
+def test_run():
 	""" Show an example simulation. """
 	sim = Simulation(num_agents=20, max_iterations=40, connectivity=.3)
 	sim.run()

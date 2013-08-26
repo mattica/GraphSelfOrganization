@@ -69,11 +69,11 @@ class MexicanHatGradient(MexicanHat):
 class Field(object):
 	"""
 	Represents a scalar field computed from the sum of agent effects. 
-	Each agent's component of the field is a radial function, and the 
+	Each agent's component of the field is a local function, and the 
 	components are simply added. 
 	"""
 	def __init__(self, agents, function):
-		self.function = function
+		self.function = function #neighborhood function for each agent
 		self.points = {}
 		self.update(agents)
 

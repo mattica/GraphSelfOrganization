@@ -67,6 +67,7 @@ class Spread(object):
 		for the rule's application. This one could potentially apply to 
 		any agent, so it returns an option for each agent. 
 		"""
+		#assigns _apply function - does not call it!
 		return [Option([ID], self._apply) for ID in graph.nodes_iter()]
 
 
